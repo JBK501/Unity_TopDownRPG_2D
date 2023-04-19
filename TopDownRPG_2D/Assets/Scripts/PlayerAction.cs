@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerAction : MonoBehaviour
 {
     public float speed;
+    public GameManager manager;
 
     Rigidbody2D rigid;
     Animator anim;
@@ -26,14 +27,14 @@ public class PlayerAction : MonoBehaviour
     void Update()
     {
         // Move Value  
-        h = Input.GetAxisRaw("Horizontal");
-        v = Input.GetAxisRaw("Vertical");
+        h = manager.isAction ? 0 : Input.GetAxisRaw("Horizontal");
+        v = manager.isAction ? 0 : Input.GetAxisRaw("Vertical");
 
         // Check Button Down & Up
-        bool hDown = Input.GetButtonDown("Horizontal");
-        bool vDown = Input.GetButtonDown("Vertical");
-        bool hUp = Input.GetButtonUp("Horizontal");
-        bool vUp = Input.GetButtonUp("Vertical");
+        bool hDown = manager.isAction ? false : Input.GetButtonDown("Horizontal");
+        bool vDown = manager.isAction ? false : Input.GetButtonDown("Vertical");
+        bool hUp = manager.isAction ? false : Input.GetButtonUp("Horizontal");
+        bool vUp = manager.isAction ? false : Input.GetButtonUp("Vertical");
 
         // Check Horizontal Move
         if (hDown)
@@ -54,8 +55,8 @@ public class PlayerAction : MonoBehaviour
             anim.SetBool("isChange", true); 
             anim.SetInteger("vAxisRaw", (int)v);
         }
-        else
-            anim.SetBool("isChange", false);
+        else // 한 쪽 방향키를 계속 누르고 있을 때는 Walk로 이동하는 트렌지션 처리를 없앤다.
+            anim.SetBool("isChange", false); 
 
         // Direction
         if (vDown && v == 1)
@@ -69,14 +70,14 @@ public class PlayerAction : MonoBehaviour
 
         // Scan Object
         if (Input.GetButtonDown("Jump") && scanObject != null)
-            Debug.Log("this is : " + scanObject.name);
+            manager.Action(scanObject);
 
     }
 
     void FixedUpdate()
     {
         // Move
-        Vector2 moveVec = isHorizonMove ? new Vector2(h, 0) : new Vector2(0, v);
+        Vector2 moveVec = isHorizonMove ? new Vector2(h, 0) : new Vector2(0, v); // 대각선 이동 방지
         rigid.velocity = moveVec * speed;
 
         // Ray
@@ -85,9 +86,7 @@ public class PlayerAction : MonoBehaviour
         RaycastHit2D rayHit = Physics2D.Raycast(rigid.position, dirVec, 0.7f, LayerMask.GetMask("Object"));
 
         if (rayHit.collider != null)
-        {
             scanObject = rayHit.collider.gameObject;
-        }
         else
             scanObject = null;
     }
