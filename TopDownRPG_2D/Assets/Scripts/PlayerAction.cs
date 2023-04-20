@@ -26,7 +26,7 @@ public class PlayerAction : MonoBehaviour
     
     void Update()
     {
-        // Move Value  
+        // Move Value  (대화창이 열렸으면 캐릭터 이동을 제한한다.)
         h = manager.isAction ? 0 : Input.GetAxisRaw("Horizontal");
         v = manager.isAction ? 0 : Input.GetAxisRaw("Vertical");
 

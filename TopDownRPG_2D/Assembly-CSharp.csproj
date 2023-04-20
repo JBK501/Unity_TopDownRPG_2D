@@ -57,7 +57,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\ObjectData.cs" />
     <Compile Include="Assets\Scripts\PlayerAction.cs" />
+    <Compile Include="Assets\Scripts\TalkManager.cs" />
     <Compile Include="Assets\TopDown 2D RPG BE3\ReadMe\Scripts\ReadmeBE3.cs" />
   </ItemGroup>
   <ItemGroup>

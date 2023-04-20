@@ -5,25 +5,50 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public TalkManager talkManager;
     public GameObject talkPanel;
+    public Image portraitImg;
     public Text talkText;
     public GameObject scanObject;
     public bool isAction;
+    public int talkIndex;
 
     public void Action(GameObject scanObj)
     {
-        if(isAction) // Exit Action
-        {
-            isAction = false;
-        }
-        else // Enter Action
-        {
-            isAction = true;
-            scanObject = scanObj;
-            talkText.text = "이것의 이름은 " + scanObj.name + "이라고 한다.";
-        }
+        scanObject = scanObj;
+        ObjectData objData = scanObject.GetComponent<ObjectData>();
+        Talk(objData.id, objData.isNPC);
 
         talkPanel.SetActive(isAction);
+    }
+
+    void Talk(int id, bool isNPC)
+    {
+        string talkData = talkManager.GetTalk(id,talkIndex);
+        
+        if(talkData == null)
+        {
+            isAction = false;
+            talkIndex = 0;
+            return;
+        }
+
+        if(isNPC)
+        {
+            talkText.text = talkData.Split(':')[0];
+
+            portraitImg.sprite = talkManager.GetPortrait(id, int.Parse(talkData.Split(':')[1]));
+            portraitImg.color = new Color(1f, 1f, 1f, 1f);
+        }
+        else
+        {
+            talkText.text = talkData;
+
+            portraitImg.color = new Color(1f, 1f, 1f, 0f);
+        }
+
+        isAction = true;
+        talkIndex++;
     }
 
 }
