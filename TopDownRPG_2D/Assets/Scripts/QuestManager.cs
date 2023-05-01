@@ -63,7 +63,7 @@ public class QuestManager : MonoBehaviour
     }
 
     // 퀘스트와 관련된 오브젝트를 관리하는 함수
-    void ControlObject()
+    public void ControlObject()
     {
         // 퀘스트 번호와 대화 순서에 따라 오브젝트를 상태를 조절한다.
         switch(questId)
@@ -73,7 +73,9 @@ public class QuestManager : MonoBehaviour
                     questObject[0].SetActive(true);
                 break;
             case 20:
-                if (questActionIndex == 1)
+                if(questActionIndex == 0)
+                    questObject[0].SetActive(true);
+                else if (questActionIndex == 1)
                     questObject[0].SetActive(false);
                 break;
             default:
