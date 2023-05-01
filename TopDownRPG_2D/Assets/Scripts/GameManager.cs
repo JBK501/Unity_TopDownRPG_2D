@@ -8,12 +8,14 @@ public class GameManager : MonoBehaviour
     public TalkManager talkManager;
     public QuestManager questManager;
 
-    public GameObject talkPanel;
+    public Animator talkPanel;
+    public Animator portraitAnim;
+
     public Image portraitImg;
-    public Text talkText;
+    public TypeEffect talk;
 
+    public Sprite prevPortrait;
     public GameObject scanObject;
-
     public bool isAction;
     public int talkIndex;
 
@@ -32,14 +34,25 @@ public class GameManager : MonoBehaviour
         Talk(objData.id, objData.isNPC);
 
         // 대화창을 활성화 한다.
-        talkPanel.SetActive(isAction);
+        talkPanel.SetBool("isShow", isAction);
     }
 
     void Talk(int id, bool isNPC)
     {
+        int questTalkIndex = 0;
+        string talkData = "";
+
         // 대화 내용을 가져온다.
-        int questTalkIndex = questManager.GetQuestTalkIndex(id);
-        string talkData = talkManager.GetTalk(id + questTalkIndex, talkIndex);   
+        if (talk.isAnim)
+        {
+            talk.SetMsg("");
+            return;
+        }
+        else
+        {
+            questTalkIndex = questManager.GetQuestTalkIndex(id);
+            talkData = talkManager.GetTalk(id + questTalkIndex, talkIndex);
+        }
         
         // 대화가 끝났을 때
         if(talkData == null)    
@@ -54,14 +67,24 @@ public class GameManager : MonoBehaviour
         // NPC일 때만 이미지를 표시한다.
         if(isNPC)
         {
-            talkText.text = talkData.Split(':')[0];
+            // 대화를 표시한다.
+            talk.SetMsg(talkData.Split(':')[0]);
 
+            // 이미지를 표시한다.
             portraitImg.sprite = talkManager.GetPortrait(id, int.Parse(talkData.Split(':')[1]));
             portraitImg.color = new Color(1f, 1f, 1f, 1f);
+            
+            // 이미지 애니메이션을 실행한다.
+            if(prevPortrait != portraitImg.sprite)
+            {
+                portraitAnim.SetTrigger("doEffect");
+                prevPortrait = portraitImg.sprite;
+            }
         }
         else
         {
-            talkText.text = talkData;
+            // 대화를 표시한다.
+            talk.SetMsg(talkData);
 
             portraitImg.color = new Color(1f, 1f, 1f, 0f);
         }

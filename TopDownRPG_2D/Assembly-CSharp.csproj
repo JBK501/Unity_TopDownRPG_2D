@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\QuestData.cs" />
     <Compile Include="Assets\Scripts\QuestManager.cs" />
     <Compile Include="Assets\Scripts\TalkManager.cs" />
+    <Compile Include="Assets\Scripts\TypeEffect.cs" />
     <Compile Include="Assets\TopDown 2D RPG BE3\ReadMe\Scripts\ReadmeBE3.cs" />
   </ItemGroup>
   <ItemGroup>
